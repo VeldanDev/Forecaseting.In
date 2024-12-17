@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Dashboard Peramalan</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <style>
+      
+        body {
+            background-color: #f5f5dc; 
+        }
+    
+        .sb-topnav.navbar {
+            background-color: #8b4513; 
+        }
+    
+        .sb-sidenav {
+            background-color: #deb887; 
+        }
+    
+        footer.bg-light {
+            background-color: #ffe4b5; 
+        }
+    
+        .page {
+            background-color: #fffaf0; 
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .btn-primary {/* Warna hijau cerah untuk tombol */
+            border-color: #32cd32;
+        }
+    
+        .btn-primary:hover {
+            background-color: #228b22; 
+        }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark">
+        <!-- Sidebar Toggle -->
+        <button class="btn btn-sidebar-toggle btn-sm" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        <!-- Navbar Brand -->
+        <a class="navbar-brand ps-3" href="index.html">FORECASTING PENJUALAN</a>
+    </nav>
+
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Navigasi</div>
+                        <a class="nav-link" href="#" onclick="showPage('home')">
+                            <div class="sb-nav-link-icon"><i class="fas fa-home"></i></div>
+                            Beranda
+                        </a>
+                        <a class="nav-link" href="#" onclick="showPage('calculation')">
+                            <div class="sb-nav-link-icon"><i class="fas fa-calculator"></i></div>
+                            Beranda Perhitungan
+                        </a>
+                        <a class="nav-link" href="logout.html">
+                            <div class="sb-nav-link-icon"><i class="fas fa-sign-out-alt"></i></div>
+                            Logout
+                        </a>
+
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    <div class="small">Logged in as:</div>
+                    FORECASTING PENJUALAN
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <!-- Beranda -->
+                <div id="homeContent">
+                    <!-- Konten utama Beranda -->
+                    <h1 class="mt-4">Dashboard Peramalan</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Selamat datang di sistem Forecasting Penjualan!</li>
+                    </ol>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            Berikut adalah informasi terkini tentang penjualan dan makanan.
+                        </div>
+                    </div>
+                
+                    <!-- Tambahkan instruksi penggunaan di sini -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Instruksi Penggunaan Sistem
+                        </div>
+                        <div class="card-body">
+                            <p>Selamat datang di sistem Forecasting Penjualan! Berikut adalah langkah-langkah menggunakan sistem ini:</p>
+                            <ol>
+                                <li><strong>Input Data:</strong> Pergi ke halaman "Input Makanan" melalui menu navigasi.</li>
+                                <li><strong>Lihat Data:</strong> Data makanan yang telah diinput akan muncul di tabel "Daftar Makanan".</li>
+                                <li><strong>Total Penghasilan:</strong> Periksa total penghasilan mingguan di bagian bawah tabel.</li>
+                            </ol>
+                            <p>Gunakan navigasi di sebelah kiri untuk berpindah antar halaman. Untuk bantuan lebih lanjut, hubungi administrator sistem.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Beranda Perhitungan -->
+                <div id="calculation" class="page" style="display: none;">
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Beranda Perhitungan</h1>
+                        <p>Gunakan fitur ini untuk melakukan perhitungan data makanan.</p>
+                        <!-- Form Input Data Makanan -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                Gunakan form di bawah ini untuk menginput data makanan.
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Form Input Makanan
+                            </div>
+                            <div class="card-body">
+                                <form id="foodForm">
+                                    <div class="mb-3">
+                                        <label for="foodName" class="form-label">Nama Makanan</label>
+                                        <select class="form-control" id="foodName" onchange="updatePrice()" required>
+                                            <option value="Nasi Goreng" data-price="20000">Nasi Goreng (Rp 20,000)</option>
+                                            <option value="Mie Goreng" data-price="18000">Mie Goreng (Rp 18,000)</option>
+                                            <option value="Ayam Penyet" data-price="15000">Ayam Penyet (Rp 15,000)</option>
+                                            <option value="Mie Aceh" data-price="12000">Mie Aceh (Rp 12,000)</option>
+                                            <option value="Mie Ayam Bakso" data-price="13000">Mie Ayam Bakso (Rp 13,000)</option>
+                                        </select>
+                                    </div>
+                                   
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="foodQuantity" class="form-label">Jumlah Makanan</label>
+                                        <input type="number" class="form-control" id="foodQuantity" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="foodPeriod" class="form-label">Periode mingguan</label>
+                                        <input type="text" class="form-control" id="foodPeriod" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="foodPrice" class="form-label">Harga Makanan(Rp)</label>
+                                        <input type="number" class="form-control" id="foodPrice" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Tambah Makanan</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <h1 class="mt-4">Daftar Makanan</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">Data Makanan yang Telah Diinput</li>
+                        </ol>
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                Berikut adalah daftar makanan yang telah diinput:
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-table me-1"></i>
+                                Tabel Data Makanan dan Forecasting Pembelian
+                            </div>
+                            <div class="card-body">
+                                <table id="foodTable" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Makanan</th>
+                                            <th>Jumlah makanan</th>
+                                            <th>Periode(mingguan)</th>
+                                            <th>Harga</th>
+                                            <th>Single Moving Average</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                       
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="4" style="text-align:left">Total Penghasilan mingguan(Rp.):</th>
+                                            <th id="totalEarnings">0</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-line me-1"></i>
+                                Kurva Penjualan Berdasarkan Single Moving Average
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+                        
+            </main>
+            <footer class="py-4 mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">AMADO &copy; Website 2024</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div> </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="assets/demo/chart-area-demo.js"></script>
+    <script src="assets/demo/chart-bar-demo.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
+    <script src="js/datatables-simple-demo.js"></script>
+    <script>
+        const foodData = [];
+        let totalEarnings = 0;
+
+        document.getElementById('foodForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Get form values
+            const foodName = document.getElementById('foodName').value;
+            const foodQuantity = parseInt(document.getElementById('foodQuantity').value);
+            const foodPeriod = document.getElementById('foodPeriod').value;
+            const foodPrice = parseInt(document.getElementById('foodPrice').value);
+            
+            // Add the new food data to the array
+            foodData.push({
+                name: foodName,
+                quantity: foodQuantity,
+                period: foodPeriod,
+                price: foodPrice
+            });
+            
+            // Calculate the moving average
+            const movingAverage = calculateMovingAverage(foodData.map(data => data.quantity), 3); // Weekly period
+            
+            // Create a new row
+            const table = document.getElementById('foodTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            
+            // Insert cells in the new row
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
+            const cell4 = newRow.insertCell(3);
+            const cell5 = newRow.insertCell(4);
+            
+            // Add text to the new cells
+            cell1.textContent = foodName;
+            cell2.textContent = foodQuantity;
+            cell3.textContent = foodPeriod;
+            cell4.textContent = foodPrice;
+            cell5.textContent = movingAverage;
+            
+            // Update the total earnings
+            totalEarnings += foodPrice * foodQuantity;
+            document.getElementById('totalEarnings').textContent = totalEarnings;
+            
+            // Clear the form
+            document.getElementById('foodForm').reset();
+        });
+        
+        function calculateMovingAverage(data, period) {
+            const result = [];
+            for (let i = 0; i < data.length; i++) {
+                if (i < period - 1) {
+                    result.push('-'); // Not enough data points yet
+                } else {
+                    const sum = data.slice(i - period + 1, i + 1).reduce((acc, val) => acc + val, 0);
+                    const avg = sum / period;
+                    result.push(avg.toFixed(0)); // Round to 2 decimal places
+                }
+            }
+            return result[result.length - 1];
+        }
+    </script>
+</body>
+</html>
+    </div>
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            document.getElementById(pageId).style.display = 'block';
+        }
+    </script>
+</body>
+</html>
